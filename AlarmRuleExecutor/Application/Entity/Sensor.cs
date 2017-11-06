@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using Nest;
+using Newtonsoft.Json;
 
 namespace AlarmRuleExecutor.Application.Entity
 {
@@ -15,9 +17,12 @@ namespace AlarmRuleExecutor.Application.Entity
         [Date(Name="created",Format = "dd.MM.yyyy HH:mm:ss")]
         public DateTime CreateTime { get; set; }
         [Date(Name = "modified", Format = "dd.MM.yyyy HH:mm:ss")]
-        public DateTime ModifyTime { get; set; }
+        public DateTime? ModifyTime { get; set; }
         [Boolean(Name = "active", Store = true)]
         public bool IsActive { get; set; }
+        [Nested]
+        [JsonProperty("rules")]
+        public List<Rule> Rules { get; set; }
 
     }
 }

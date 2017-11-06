@@ -19,5 +19,6 @@
     <Folder Include="Application\Data\" />
     <Folder Include="Application\Configuration\" />
     <Folder Include="Application\Entity\" />
+    <Folder Include="Application\Executor\" />
   </ItemGroup>
 </Project>
