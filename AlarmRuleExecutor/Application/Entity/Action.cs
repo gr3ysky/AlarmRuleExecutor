@@ -1,10 +1,12 @@
 ﻿using System;
+using Nest;
+
 namespace AlarmRuleExecutor.Application.Entity
 {
-    public class Action
+    public class Action : BaseEntity
     {
-        public Action()
-        {
-        }
+        public Guid RuleId { get; set; }
+        [Text(Name="type",Fielddata = true)]
+        public string Type { get; set; }
     }
 }

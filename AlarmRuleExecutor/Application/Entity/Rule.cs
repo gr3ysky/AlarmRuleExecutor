@@ -7,12 +7,11 @@ namespace AlarmRuleExecutor.Application.Entity
 {
     public class Rule:BaseEntity
     {
+        [Text(Name = "deviceId")]
+        public Guid DeviceId { get; set; }
         [Text(Name="op")]
         public string Operator { get; set; }
-        [Text(Name = "treshold")]
-        public string TresholdValue { get; set; }
-        [Nested]
-        [JsonProperty("actions")]
-        public List<Action> Actions { get; set; }
+        [Text(Name = "targetVal")]
+        public string TargetValue { get; set; }
     }
 }
