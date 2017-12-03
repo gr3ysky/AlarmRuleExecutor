@@ -4,10 +4,16 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AlarmRuleExecutor.Controllers
 {
-    public class SensorController:Controller
+    public class SensorController : Controller
     {
         [HttpGet]
-        public async Task<IActionResult> Index(){
+        public async Task<IActionResult> Index()
+        {
+            return View();
+        }
+        [HttpGet]
+        public IActionResult Create()
+        {
             return View();
         }
     }

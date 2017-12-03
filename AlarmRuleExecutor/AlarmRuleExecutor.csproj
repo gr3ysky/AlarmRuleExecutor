@@ -8,6 +8,7 @@
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
     <PackageReference Include="NEST" Version="5.5.0" />
+    <PackageReference Include="FontAwesome" Version="4.7.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -20,5 +21,6 @@
     <Folder Include="Application\Configuration\" />
     <Folder Include="Application\Entity\" />
     <Folder Include="Application\Executor\" />
+    <Folder Include="Views\Sensor\" />
   </ItemGroup>
 </Project>

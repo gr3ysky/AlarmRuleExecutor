@@ -1,0 +1,154 @@
+﻿@{
+    ViewBag.Title="Sensor Create";
+}
+@using AlarmRuleExecutor.Models
+@model SensorViewModel
+<h3>@ViewBag.Title</h3>
+<form method="post" id="sensor-create-form" action="@Url.Action("Create","Sensor")" >
+
+<div class="panel panel-primary">
+<div class="panel-heading">
+<h4 class="panle-title">Sensor</h4>
+    </div>
+   <div class="panel-body">
+
+  
+    <div class="row">
+   
+    <div class="col-md-6">
+         <div class="form-group">
+        <label asp-for="Name" class="control-label">Name</label>
+        <input type="text" class="form-control col-md-4" asp-for="Name"/>
+    </div>
+    </div>
+     <div class="col-md-6">
+         <div class="form-group">
+        <label asp-for="Description" class="control-label">Description</label>
+        <textarea type="text" class="form-control" asp-for="Description"></textarea>
+    </div>
+      </div>
+     <div class="col-md-6">
+         <div class="form-group">
+        <label asp-for="DataType" class="control-label">Data Type</label>
+       <select asp-for="DataType" class="form-control" asp-items="@Html.GetEnumSelectList<DataType>()"></select>
+    </div>
+       
+     </div>
+       <div class="col-md-6">
+         <div class="form-group">
+        <label asp-for="Value" class="control-label">Value</label>
+        <input type="text" class="form-control" asp-for="Value"/>
+    </div>      
+     </div>
+    </div>
+    <div class="clear-fix"></div>
+
+    </div>
+      </div>
+
+      <div  class="panel panel-warning">
+        <div class="panel-heading">
+            <h4 class="panel-title">Rules<a data-toggle="modal" data-target="#rule-modal" style="margin-top:-6px;" class="btn btn-sm pull-right"><i class="glyphicon glyphicon-plus"></i></a></h4> 
+
+        </div>
+        <div class="panel-body" id="rules">
+            <table class="table table-stripped table-bordered">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Operation</th>
+                        <th>Value</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>  
+        </div>
+    </div>
+
+    <div class="col-md-12"> 
+    <button class="btn btn-primary pull-right"><i class="glyphicon glyphicon-floppy-disk"></i> &nbsp; Save</button>
+    </div>
+    <div class="clear-fix" ></div>
+
+
+
+    
+</form>
+<div>
+</div>
+
+<div id="rule-modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Add Rule</h4>
+      </div>
+      <div class="modal-body">
+           <div class="form-group">
+                <label for="rule-name" class="control-lable">Rule Name</label>
+                <input type="text" name="rule-name" id="rule-name" class="form-control" />
+           </div>
+           <div class="form-group">
+                <label for="rule-name" class="control-lable">Operation</label>
+                <select name="rule-operation" id="rule-operation" class="form-control" asp-items="@Html.GetEnumSelectList<RuleOperation>()"></select>
+           </div>
+            <div class="form-group">
+                <label for="rule-value" class="control-lable">Value</label>
+                <input type="text" name="rule-value" id="rule-value" class="form-control" />
+           </div>
+                
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" onclick="Sensor.addRule();">Add</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div id="action-modal" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-lg">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Add Action</h4>
+      </div>
+      <div class="modal-body">
+           <div class="form-group">
+                <label for="action-name" class="control-lable">Action Name</label>
+                <input type="text" name="action-name" id="action-name" class="form-control" />
+           </div>
+           <div class="form-group">
+                <label for="rule-name" class="control-lable">Operation</label>
+                <select name="rule-operation" id="rule-operation" class="form-control" asp-items="@Html.GetEnumSelectList<RuleOperation>()"></select>
+           </div>
+            <div class="form-group">
+                <label for="rule-value" class="control-lable">Value</label>
+                <input type="text" name="rule-value" id="rule-value" class="form-control" />
+           </div>
+                
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" onclick="Sensor.actionToRule();">Add</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+
+@section Scripts{
+    
+
+}
+
