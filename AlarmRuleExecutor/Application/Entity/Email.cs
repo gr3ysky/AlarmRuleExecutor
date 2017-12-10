@@ -13,7 +13,7 @@ namespace AlarmRuleExecutor.Application.Entity
         public string To { get; set; }
         [Text(Name = "sub")]
         public string Subject { get; set; }
-        [Text(Name = "msg")]
-        public string Message { get; set; }
+        [Text(Name = "body")]
+        public string Body { get; set; }
     }
 }

@@ -22,5 +22,6 @@
     <Folder Include="Application\Entity\" />
     <Folder Include="Application\Executor\" />
     <Folder Include="Views\Sensor\" />
+    <Folder Include="Application\Dto\" />
   </ItemGroup>
 </Project>

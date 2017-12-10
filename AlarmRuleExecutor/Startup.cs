@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AlarmRuleExecutor.Application.Configuration;
 using AlarmRuleExecutor.Application.Data;
+using AlarmRuleExecutor.Application.Executor;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -32,10 +33,11 @@ namespace AlarmRuleExecutor
             services.AddSingleton<IOptions<ElasticSearchConnectionSettings>>(new OptionsWrapper<ElasticSearchConnectionSettings>(elasticSearchConnectionSettings));
             //https://www.elastic.co/guide/en/elasticsearch/client/net-api/master/lifetimes.html
             services.AddSingleton<IElasticSearchManager, ElasticSearchManager>();
-
-
-
-
+            services.AddScoped<IRuleExecutor, RuleExecutor>();
+            //emailsettings
+            var emailSettings = new EmailSettings();
+            Configuration.GetSection("EmailSettings").Bind(emailSettings);
+            services.AddSingleton<IOptions<EmailSettings>>(new OptionsWrapper<EmailSettings>(emailSettings));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

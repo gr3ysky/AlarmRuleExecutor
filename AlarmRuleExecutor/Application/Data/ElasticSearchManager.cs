@@ -64,6 +64,9 @@ namespace AlarmRuleExecutor.Application.Data
             return response.Documents.ToList();
         }
 
-
+        public void Log(string index, string type, object obj)
+        {
+            _client.Index<object>(obj, req => req.Index(index).Type(type).Id(Guid.NewGuid()));
+        }
     }
 }

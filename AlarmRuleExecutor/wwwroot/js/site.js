@@ -21,12 +21,14 @@ var Action = {};
             $("#WebRequestWrap").addClass("hidden");
             $("#ContentWrap").removeClass("hidden");
             $("#SubjectWrap").removeClass("hidden");
+            $("#ToWrap").removeClass("hidden");
             break;
             case "WebRequest":
             tinymce.remove();
             $("#WebRequestWrap").removeClass("hidden");
             $("#SubjectWrap").addClass("hidden");
             $("#ContentWrap").addClass("hidden");
+            $("#ToWrap").addClass("hidden");
             break;
         }
         $("#Content").val(json);
@@ -138,14 +140,19 @@ var Action = {};
             
             var content={};
             content.Subject=$("#Subject").val();
-            content.Body=tinymce.activeEditor.getContent();
+            content.Body=escape(tinymce.activeEditor.getContent());
             content.To=$("#To").val();
-            $("#Content").val(JSON.stringify(content));
-            $("#To").val(""); 
-            $("#Subject").val("");    
+            $("#Content").val(JSON.stringify(content));   
         }
-        $("#action-modal").modal("toggle");
         var ruleId=$("#action-ruleId").val();
+        var $form=$("#sensor-create-form");
+        var actionCount=$('input[name^="Rules['+ruleId+'].Actions"]').length/3;
+
+
+        $form.append("<input type='hidden' name='Rules["+ruleId+"].Actions["+actionCount+"].Name' value='"+$("#ActionType").val()+"' />");
+        $form.append("<input type='hidden' name='Rules["+ruleId+"].Actions["+actionCount+"].Type' value='"+$("#ActionType").val()+"' />");
+        $form.append("<input type='hidden' name='Rules["+ruleId+"].Actions["+actionCount+"].Content' value='"+$("#Content").val()+"' />");
+        $("#action-modal").modal("toggle");     
         var $rule=$("#rule-"+ruleId);
         var $actions=$("#actions-"+ruleId);
         if($actions.length==0){
@@ -173,6 +180,10 @@ var Action = {};
                 $("input.header-value", e).val("");
             }
         });
+
+        $("#To").val(""); 
+        $("#Subject").val("");
+        $("#Content").val("");
     };
 
 })(Action);
@@ -188,7 +199,7 @@ var ruleCount=0;
         var ruleValue=$("#rule-value").val();
         var $form=$("#sensor-create-form");
         $form.append("<input type='hidden' name='Rules["+ruleCount+"].Name' value='"+ruleName+"' />");
-        $form.append("<input type='hidden' name='Rules["+ruleCount+"].Operation' value='"+ruleOperation+"' />");
+        $form.append("<input type='hidden' name='Rules["+ruleCount+"].Operator' value='"+ruleOperation+"' />");
         $form.append("<input type='hidden' name='Rules["+ruleCount+"].Value' value='"+ruleValue+"' />");
         var html="<tr id='rule-"+ruleCount+"'>";
         html+="<td>"+ruleName+"</td>";

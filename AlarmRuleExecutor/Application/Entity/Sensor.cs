@@ -14,6 +14,8 @@ namespace AlarmRuleExecutor.Application.Entity
         public string Description { get; set; }
         [Text(Name = "val", Fielddata = true)]
         public string Value { get; set; }
+        [Text(Name = "dataType", Fielddata = true)]
+        public string Datatype { get; set; }
         [Date(Name="created",Format = "dd.MM.yyyy HH:mm:ss")]
         public DateTime CreateTime { get; set; }
         [Date(Name = "modified", Format = "dd.MM.yyyy HH:mm:ss")]
