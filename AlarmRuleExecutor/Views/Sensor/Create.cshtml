@@ -4,6 +4,14 @@
 @using AlarmRuleExecutor.Models
 @model SensorViewModel
 <h3>@ViewBag.Title</h3>
+@section Header{
+    <link href="/css/json-forms/brutusin-json-forms.css" rel="stylesheet"/>
+    <link href="/css/bootstrap-select.css" rel="stylesheet"/>
+    <link href="/css/treema.css" rel="stylesheet"/>
+}
+
+
+
 <form method="post" id="sensor-create-form" action="@Url.Action("Create","Sensor")" >
 
 <div class="panel panel-primary">
@@ -122,23 +130,131 @@
         <h4 class="modal-title">Add Action</h4>
       </div>
       <div class="modal-body">
-           <div class="form-group">
-                <label for="action-name" class="control-lable">Action Name</label>
-                <input type="text" name="action-name" id="action-name" class="form-control" />
-           </div>
-           <div class="form-group">
-                <label for="rule-name" class="control-lable">Operation</label>
-                <select name="rule-operation" id="rule-operation" class="form-control" asp-items="@Html.GetEnumSelectList<RuleOperation>()"></select>
-           </div>
-            <div class="form-group">
-                <label for="rule-value" class="control-lable">Value</label>
-                <input type="text" name="rule-value" id="rule-value" class="form-control" />
-           </div>
+        <div class="row">
+    <div class="col-md-12">
+        <section>
+            <div>
+                <div>
+                        <input type="hidden" id="action-ruleId" name="action-ruleId" />                
+                        <div class="form-group">
+                            @Html.Label("ActionType","Action Type", new { @class = "col-md-3 control-label" })
+                            @Html.DropDownList("ActionType", ViewBag.ActionTypes as IEnumerable<SelectListItem>, new { @class = "form-control", onchange = "Action.actionTypeChange()" })
+                        </div>
+                        <div class="form-group">
+                            @Html.Label("Name","Action Name", new { @class = "col-md-3 control-label" })
+                            @Html.TextBox("ActionName","",  new { @class = "form-control"  })
+                        </div>
+                        <div class="clearfix"></div>
+                        <div id="KeywordsBtnWrap" class="form-group hidden">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Ekle <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a onclick="Action.addContent('[ActionDate]')">Eylem Tarihi</a>
+                                    </li>
+                                    <li>
+                                        <a onclick="Action.addContent('[SensorName]')">Sensör Adı</a>
+                                    </li>
+                                    <li>
+                                        <a onclick="Action.addContent('[SensorValue]')">Sensör Değeri</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div id="ContentWrap" class="form-group">
+                            @Html.Label("Content", "", new { @class = " control-label" })                 
+                            @Html.TextArea("Content","", new { @class = "form-control", rows = "4" })
+                        </div>
+                        <div id="SubjectWrap" class="form-group hidden">
+                            @Html.Label("Subject","Subject", new { @class = " control-label" })
+                            @Html.TextBox("Subject","", new { @class = "form-control" })
+                        </div>
+                         <div id="ToWrap" class="form-group hidden">
+                            @Html.Label("To","To", new { @class = " control-label" })
+                            @Html.TextBox("To","", new { @class = "form-control" })
+                        </div>
+                                    
+                        <div id="WebRequestWrap" class="hidden">
+                            <div class="form-group">
+                                <label class="control-label">Method</label>
+                                <select name="Method" class="form-control">
+                                    <option value="Get">GET</option>
+                                    <option value="Post">POST</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label">Url</label>
+                                <input type="text" class="form-control" name="Url" />
+                            </div>
+                            <div class="clearfix"></div>
+
+                            <div id="SecurityWrap" class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">Security</h4>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="form-group">
+                                        <label class="control-label">Type</label>
+                                        <select name="Type" class="form-control">
+                                            <option>None</option>
+                                            <option value="Basic">Basic</option>
+                                        </select>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                    <div class="form-group">
+                                        <label class="control-label">Username</label>
+                                        <input type="text" class="form-control" name="Username" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Password</label>
+                                        <input type="password" class="form-control" name="Password" />
+                                    </div>
+
+                                </div>
+                            </div>
+
+
+                            <div id="HeadersWrap" class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                        Headers <a onclick="Action.addHeader()"  style="margin-top:-6px;" class="btn btn-sm pull-right"><i class="glyphicon glyphicon-plus"></i>
+                                        </a>
+                                    </h4>
+                                </div>
+                                <div class="panel-body">
+                                    <div id="row-0">
+                                        <div class="form-group col-md-6">
+                                            <label class="control-label">Name</label>
+                                            <input type="text" name="headername[0]" class="header-name form-control" />
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <label class="control-label">Value</label>
+                                            <input type="text" name="headervalue[0]" class="header-value form-control" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group col-md-6 mt-10">
+                                <label class="control-label">Body</label>
+                                <div class="Body"></div>
+                            </div>
+
+                        </div>    
+                 
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
                 
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" onclick="Sensor.actionToRule();">Add</button>
+        <button type="button" class="btn btn-primary" onclick="Action.beforeSave();">Add</button>
       </div>
     </div>
 
@@ -148,7 +264,21 @@
 
 
 @section Scripts{
-    
-
+    <script src="/lib/markdown.js"></script>
+    <script src="/lib/bootstrap-select.min.js"></script>
+    <script src="/lib/tinymce/js/tinymce/tinymce.min.js"></script>
+    <script src="/lib/json-forms/brutusin-json-forms.js"></script>
+    <script src="/lib/json-forms/brutusin-json-forms-bootstrap.js"></script>
+    <script src="/lib/tv4.min.js" type="text/javascript"></script>
+    <script src="/lib/treema.js" type="text/javascript"></script>
+    <script type="text/javascript">
+       var treema;
+        $(document).ready(function() {
+            var options = { schema:{ "additionalProperties": true,
+                "type": "object",}, data:{} };
+            var el = $(".Body");
+            treema = el.treema(options);
+            treema.build();
+        });
+    </script>
 }
-

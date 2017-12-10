@@ -8,6 +8,175 @@
 /*toastr options*/
 toastr.options.preventDuplicates = true;
 
+var Action = {};
+(function(action) {
+    action.json = {};
+    action.actionTypeChange = function() {
+        var actionType = $("#ActionType").val();
+        var json = "";
+        switch (actionType) {
+            case "Email":
+            action.initEdit("");
+            $("#KeywordsBtnWrap").addClass("hidden");
+            $("#WebRequestWrap").addClass("hidden");
+            $("#ContentWrap").removeClass("hidden");
+            $("#SubjectWrap").removeClass("hidden");
+            break;
+            case "WebRequest":
+            tinymce.remove();
+            $("#WebRequestWrap").removeClass("hidden");
+            $("#SubjectWrap").addClass("hidden");
+            $("#ContentWrap").addClass("hidden");
+            break;
+        }
+        $("#Content").val(json);
+    };
+    action.initEdit = function (value) {
+            tinymce.remove();
+            
+            $("#Content").html(value);
+            $("#SubjectWrap").removeClass("hidden");
+            tinymce.init({
+                selector: "#Content",
+                height: 300,
+                menubar: false,
+                plugins: [
+                    "advlist autolink lists link image charmap print preview anchor",
+                    "searchreplace visualblocks code fullscreen",
+                    "insertdatetime media table contextmenu paste code"
+                ],
+                toolbar:
+                    "undo redo | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | addKeyword",
+                setup: function(editor) {
+                    editor.addButton("addKeyword",
+                    {
+                        type: "listbox",
+                        text: "Add",
+                        icon: false,
+                        onselect: function(e) {
+                            editor.insertContent(this.value());
+                        },
+                        values: [
+                            { text: "Action Date", value: "[ActionDate]" },
+                            { text: "Sensor Name", value: "[SensorName]" },
+                            { text: "Sensor Value", value: "[SensorValue]" }
+                        ],
+
+                    });
+                },
+            });
+        
+    };
+
+    action.addContent = function(value) {
+        $("#Content").val($("#Content").val() + value);
+    };
+    action.addHeader = function() {
+        var index = $("#HeadersWrap .panel-body input.header-name").length;
+        var html = '<div id="row-' +
+            index +
+            '"><div class="form-group col-md-5">' +
+            '<label class="control-label" > Name</label>' +
+            '<input type="text" name="headername[' +
+            index +
+            ']" class="header-name form-control" />' +
+            "</div>" +
+            '<div class="form-group col-md-5">' +
+            '<label class="control-label">Value</label>' +
+            '<input type="text" name="headervalue[' +
+            index +
+            ']" class="header-value form-control" />' +
+            "</div>" +
+            '<div class="col-md-2 text-align-center" style="margin-top: 35px;">' +
+            '<a class="text-danger" onclick="Action.deleteHeader(' +
+            index +
+            ')">' +
+            '<i class="fa fa-minus"></i>' +
+            "</a>" +
+            "</div> </div>";
+        $("#HeadersWrap .panel-body").append(html);
+    };
+    action.deleteHeader = function(index) {
+        var total = $("#HeadersWrap .panel-body input.header-name").length;
+        $("#row-" + index).remove();
+        for (var i = index + 1; i < total; i++) {
+            var $row = $("#row-" + i);
+            $row.attr("id", "row-" + (i - 1));
+            $("input", $row).each(function(i1, e1) {
+                var $input = $(e1);
+                if ($input.hasClass("header-name") == true) {
+                    $input.attr("name", "headername[" + (i - 1) + "]");
+                } else {
+                    $input.attr("name", "headervalue[" + (i - 1) + "]");
+                }
+            });
+        }
+    };
+
+    action.beforeSave = function () {      
+        var actionType = $("#ActionType").val();
+        if (actionType=="WebRequest") {
+            var content = {};
+            content.Method = $("select[name=Method]").val();
+            content.Body = treema.data;
+            content.Headers = [];
+            $("#HeadersWrap .panel-body div[id^=row-]").each(function(i, e) {
+                var name = $("input.header-name", e).val();
+                if (name != "") {
+                    var value = $("input.header-value", e).val();
+                    content.Headers.push({ "Name": name, "Value": value });
+                }
+            });
+            content.Url = $("input[name=Url]").val();
+            content.Security = {};
+            content.Security.Type = $("select[name=Type]").val();
+            content.Security.Username = $("input[name=Username]").val();
+            content.Security.Password = $("input[name=Password]").val();
+            $("#Content").val(JSON.stringify(content));     
+        }
+        else {
+            
+            var content={};
+            content.Subject=$("#Subject").val();
+            content.Body=tinymce.activeEditor.getContent();
+            content.To=$("#To").val();
+            $("#Content").val(JSON.stringify(content));
+            $("#To").val(""); 
+            $("#Subject").val("");    
+        }
+        $("#action-modal").modal("toggle");
+        var ruleId=$("#action-ruleId").val();
+        var $rule=$("#rule-"+ruleId);
+        var $actions=$("#actions-"+ruleId);
+        if($actions.length==0){
+            $rule.after("<tr id='actions-"+ruleId+"'><td colspan='4'><table class='table'><thead><th colspan='3'>Actions</th></thead><thead><th>Name</th><th>Type</th><th>Content</th></thead></table></td></tr>");
+            $actions=$("#actions-"+ruleId);
+        }
+        var $actionsTable=$("table",$actions);
+
+        var $actionName=$("#ActionName");
+
+        $actionsTable.append("<tr><td>"+$actionName.val()+"</td><td>"+$("#ActionType").val()+"</td><td>"+$("#Content").val()+"</td></tr>");
+        $("#Content").val("");
+        $("#ActionName").val("");  
+        treema.data={};
+        $("#Url").val(""); 
+        $("input[name=Username]").val("");
+        $("input[name=Password]").val("");
+       $("#HeadersWrap .panel-body div[id^=row-]").each(function(i, e) {
+            if(i>0){
+                $("input.header-name", e).remove();
+                $("input.header-value", e).remove();
+            }
+            else{
+                $("input.header-name", e).val("");
+                $("input.header-value", e).val("");
+            }
+        });
+    };
+
+})(Action);
+
 
 var Sensor={};
 var ruleCount=0;
@@ -33,19 +202,13 @@ var ruleCount=0;
     sensor.deleteRule=function(ruleId){
         $("#rule-"+ruleId).remove();
         $("input[name^='Rules["+ruleId+"]']").remove();
+         $("#actions-"+ruleId).remove();
     };
 
     sensor.addAction=function(ruleId){
+        $("#action-ruleId").val(ruleId);
+        Action.actionTypeChange();
         $("#action-modal").modal();
-        var $rule=$("#rule-"+ruleId);
-        var $actions=$("#actions-"+ruleId);
-        if($actions.length==0){
-            $rule.after("<tr id='actions-"+ruleId+"'><td colspan='4'><table class='table'><thead><th colspan='4'>Actions</th></thead><thead><th>Name</th><th>Value</th><th>Name</th><th>Name</th></thead></table></td></tr>");
-            $actions=$("#actions-"+ruleId);
-        }
-        var $actionsTable=$("table",$actions);
-
-        $actionsTable.append("<tr><td>aksdh</td></tr>");
     };
 
 
