@@ -23,5 +23,6 @@
     <Folder Include="Application\Executor\" />
     <Folder Include="Views\Sensor\" />
     <Folder Include="Application\Dto\" />
+    <Folder Include="Application\Security\" />
   </ItemGroup>
 </Project>

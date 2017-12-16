@@ -1,9 +1,76 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
+@using AlarmRuleExecutor.Application.Entity
+@using AlarmRuleExecutor.Models
+@model List<Sensor>
 <div class="row" style="margin-top:20px">
     <div class="col-md-12">
         <a href="@Url.Action("create","sensor")" class="btn btn-primary">Add Sensor</a> 
     </div>
 
 </div>
+<hr />
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h4 class="panel-title">Sensors</h4>
+    </div>
+    <div class="panel-body" style="max-height:500px; overflow-y:auto">
+        <div class="row">
+        @foreach(var sensor in Model){
+            <div class="col-md-4">
+                <div class="sensor-wrapper">
+                   <table class="table table-sm table-bordered">
+                        <tr class="danger">
+                            <th class="primary">Sensor Id</th><td> @sensor.Id</td>
+                        </tr>
+                        <tr class="warning">
+                            <th class="primary">Sensor Name</th><td> @sensor.Name</td>
+                        </tr>
+                         <tr class="success">
+                            <th class="primary">Sensor Description</th><td> @sensor.Description</td>
+                        </tr>
+                          <tr class="danger">
+                            <th class="primary">Sensor Data Type</th><td> @Enum.Parse(typeof(DataType),sensor.Datatype.ToString())</td>
+                        </tr>
+                           <tr class="warning">
+                            <th class="primary">Rule Count</th><td> @sensor.Rules.Count</td>
+                        </tr>
+                         <tr class="info">
+                            <td colspan="2" class="primary text-right">
+                                <a class="btn btn-default btn-sm" onclick="Sensor.openSimulationPopup('@sensor.Id')">Simulate</a>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        }
+        </div>
+    </div>
+    <div class="panel-footer">
+        Total: @Model.Count
+    </div>
+</div>
+
+Save changes
+<div id="sensor-simulator-popup" class="modal fade" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Sensor Simulator</h4>
+      </div>
+      <div class="modal-body">
+            <div class="form-group">
+                <label class="control-label">Value:</label>
+                <input type="text" class="form-control" id="SensorSimulationValue" />
+                <input type="hidden" id="SimulationSensorId" />
+            </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" onclick="Sensor.sendSimulationValue()">Send</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

@@ -19,16 +19,12 @@ namespace AlarmRuleExecutor.Controllers
         }
         public async Task<IActionResult> Index()
         {
-            //var filters = new Dictionary<string, object>();
-            //filters.Add("type", "webrequest");
-            //var webreqs = await _manager.Search<Application.Entity.WebRequest>("action", "data", 
-                                                                             //filters
-                                                                             
-                                                                             //);
+            var criteria = new Dictionary<string, object>();
+            criteria.Add("active", true);
+            var sensors = await _manager.Search<Sensor>("sensor", "data", criteria);
+           
 
-
-  
-            return View();
+            return View(sensors);                                                         
         }
 
         public IActionResult About()

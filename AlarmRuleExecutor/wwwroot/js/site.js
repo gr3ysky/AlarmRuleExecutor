@@ -221,7 +221,25 @@ var ruleCount=0;
         Action.actionTypeChange();
         $("#action-modal").modal();
     };
+    sensor.openSimulationPopup=function(sensorId){
+        $("#SimulationSensorId").val(sensorId);
+        $("#sensor-simulator-popup").modal();
+    }
+    sensor.sendSimulationValue=function(){
+   
+        $.ajax({
+          type: "POST",
+          url: "alarm",
+          data: JSON.stringify({SensorId :$("#SimulationSensorId").val(),Value:$("#SensorSimulationValue").val()}),
+          success: function(){
+                       $("#sensor-simulator-popup").modal("toggle");
+                       toastr.success("Simulation succeeded.");
+                }
+          ,
+          contentType:"application/json; charset=utf-8"
+       });
 
+    }
 
 })(Sensor);
 

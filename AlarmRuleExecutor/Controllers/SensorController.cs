@@ -10,8 +10,14 @@ namespace AlarmRuleExecutor.Controllers
 {
     public class SensorController : Controller
     {
+        private readonly IElasticSearchManager _manager;
+
+        public SensorController(IElasticSearchManager manager)
+        {
+            _manager = manager;
+        }
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
             return View();
         }
@@ -22,6 +28,9 @@ namespace AlarmRuleExecutor.Controllers
             actionTypes.Add(new SelectListItem(){Text="Web Request",Value="WebRequest"});
             actionTypes.Add(new SelectListItem() { Text = "Email", Value = "Email" });
             ViewBag.ActionTypes = actionTypes;
+
+
+
             return View();
         }
         [HttpPost]
